@@ -1,0 +1,23 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+
+-   repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v17.0.6
+    hooks:
+    -   id: clang-format
+        args: [--style=file]
+        types_or: [c++, c, cuda]
+
+-   repo: local
+    hooks:
+    -   id: cppcheck
+        name: Cppcheck
+        entry: cppcheck # or "C:\path\to\cppcheck.exe" if not in PATH
+        language: system
+        types: [c, c++]
+        args: [--enable=all, --suppress=missingIncludeSystem] # add any desired cppcheck arguments.

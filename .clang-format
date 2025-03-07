@@ -1,0 +1,22 @@
+Language: Cpp
+Standard: c++20
+BasedOnStyle: Microsoft
+
+# Indentation
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+AccessModifierOffset: -4
+
+# Line breaks
+ColumnLimit: 120
+BreakBeforeBraces: Allman
+AlwaysBreakTemplateDeclarations: Yes
+
+# Spacing
+SpaceAfterTemplateKeyword: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+PointerAlignment: Right

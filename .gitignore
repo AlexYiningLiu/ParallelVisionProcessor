@@ -1,0 +1,37 @@
+# Ignore the Resources directory
+Resources/
+/Resources/
+**/Resources/
+
+# Ignore the build directory
+build/
+/build/
+**/build/
+
+.idea/
+
+# Common C++ ignores
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.lib
+*.a
+*.out
+
+# VS/MSVC specific
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.filters
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Rr]eleases/
