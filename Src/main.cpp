@@ -28,7 +28,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // Parse command line arguments
     std::string imagePath = argv[1];
     auto numThreads = static_cast<int>(std::thread::hardware_concurrency());
     MultiThreadProcessor::ThreadingStrategy strategy = MultiThreadProcessor::ThreadingStrategy::ThreadPool;
@@ -90,7 +89,6 @@ int main(int argc, char **argv)
 
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR);
 
-    // Load the input image
     cv::Mat inputImage = cv::imread(imagePath);
     if (inputImage.empty())
     {
@@ -100,36 +98,28 @@ int main(int argc, char **argv)
 
     std::cout << "Image loaded: " << imagePath << " (" << inputImage.cols << "x" << inputImage.rows << ")\n";
 
-    // Create processors
     SingleThreadProcessor singleProcessor;
     MultiThreadProcessor multiProcessor(numThreads, strategy);
 
-    // Create metrics tracker
     PerformanceMetrics metrics;
 
-    // Process with single thread
     std::cout << "Processing with single thread...\n";
     metrics.startTimer("SingleThread");
     cv::Mat singleThreadResult = singleProcessor.process(inputImage);
     metrics.stopTimer("SingleThread");
 
-    // Process with multi thread
     std::cout << "Processing with " << numThreads << " threads...\n";
     metrics.startTimer("MultiThread");
     cv::Mat multiThreadResult = multiProcessor.process(inputImage);
     metrics.stopTimer("MultiThread");
 
-    // Calculate and display performance metrics
     metrics.printMetrics(numThreads);
 
-    // Get the regions used for visualization
     auto regions = multiProcessor.divideImageIntoRegions(inputImage);
 
-    // Save timing chart
     Visualizer::saveTimingChart("timing_chart.png", metrics.getElapsedTime("SingleThread"),
                                 metrics.getElapsedTime("MultiThread"), numThreads);
 
-    // Visualize the results
     Visualizer::displayImages(inputImage, singleThreadResult, multiThreadResult, regions);
 
     return 0;

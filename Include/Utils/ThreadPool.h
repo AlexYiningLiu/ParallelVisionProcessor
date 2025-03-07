@@ -8,22 +8,16 @@
 #include <thread>
 #include <vector>
 
-// A modern C++ thread pool implementation
 class ThreadPool
 {
 public:
-    // Constructor initializes the thread pool with the specified number of
-    // threads
     explicit ThreadPool(size_t numThreads);
 
-    // Destructor joins all threads
     ~ThreadPool();
 
-    // Delete copy constructor and assignment operator
     ThreadPool(const ThreadPool &) = delete;
     ThreadPool &operator=(const ThreadPool &) = delete;
 
-    // Add task to the thread pool
     template <class F, class... Args>
     auto enqueue(F &&f, Args &&...args) -> std::future<typename std::invoke_result<F, Args...>::type>
     {
@@ -50,13 +44,10 @@ public:
     }
 
 private:
-    // Worker threads
     std::vector<std::thread> mWorkers;
 
-    // Task queue
     std::queue<std::function<void()>> mTasks;
 
-    // Synchronization
     std::mutex mQueueMutex;
     std::condition_variable mCondition;
     bool mStop;

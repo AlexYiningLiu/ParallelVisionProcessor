@@ -14,7 +14,7 @@ void PerformanceMetrics::stopTimer(const std::string &name)
     std::lock_guard<std::mutex> lock(mMutex);
     auto endTime = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - mStartTime).count();
-    mElapsedTimes[name] = static_cast<double>(duration) / 1000.0; // Convert to seconds
+    mElapsedTimes[name] = static_cast<double>(duration) / 1000.0;
 }
 
 double PerformanceMetrics::getElapsedTime(const std::string &name) const
@@ -68,17 +68,15 @@ void PerformanceMetrics::printMetrics(int numThreads) const
     std::cout << "Speedup: " << speedup << "x\n";
     std::cout << "Efficiency: " << efficiency << " (speedup per thread)\n";
 
-    // Amdahl's Law analysis
     if (speedup > 0 && numThreads > 1)
     {
-        // Estimate the sequential portion using Amdahl's Law
+
         double sequentialFraction = (1.0 / speedup - 1.0 / numThreads) / (1.0 - 1.0 / numThreads);
-        sequentialFraction = std::max(0.0, std::min(1.0, sequentialFraction)); // Clamp to [0,1]
+        sequentialFraction = std::max(0.0, std::min(1.0, sequentialFraction));
 
         std::cout << "Estimated sequential portion: " << (sequentialFraction * 100.0) << "%\n";
         std::cout << "Estimated parallel portion: " << ((1.0 - sequentialFraction) * 100.0) << "%\n";
 
-        // Theoretical maximum speedup (Amdahl's Law)
         double theoreticalMaxSpeedup = 1.0 / (sequentialFraction + (1.0 - sequentialFraction) / numThreads);
         std::cout << "Theoretical maximum speedup: " << theoreticalMaxSpeedup << "x\n";
         std::cout << "Achieved " << (speedup / theoreticalMaxSpeedup * 100.0) << "% of theoretical maximum\n";
