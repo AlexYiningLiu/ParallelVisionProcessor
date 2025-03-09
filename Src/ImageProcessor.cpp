@@ -1,6 +1,6 @@
 #include <Core/ImageProcessor.h>
 
-void ImageProcessor::applyHeavyFilter(cv::Mat &image, const cv::Rect &roi)
+void ImageProcessor::applyHeavyFilter(cv::Mat& image, const cv::Rect& roi)
 {
 
     cv::Mat region = image(roi);

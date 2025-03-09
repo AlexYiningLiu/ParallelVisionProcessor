@@ -1,4 +1,5 @@
 #include <Processors/MultiThreadProcessor.h>
+#include <latch>
 
 MultiThreadProcessor::MultiThreadProcessor(int numThreads, ThreadingStrategy strategy)
     : mNumThreads(numThreads), mStrategy(strategy)
@@ -9,7 +10,7 @@ MultiThreadProcessor::MultiThreadProcessor(int numThreads, ThreadingStrategy str
     }
 }
 
-cv::Mat MultiThreadProcessor::process(const cv::Mat &inputImage)
+cv::Mat MultiThreadProcessor::process(const cv::Mat& inputImage)
 {
     switch (mStrategy)
     {
@@ -27,12 +28,7 @@ cv::Mat MultiThreadProcessor::process(const cv::Mat &inputImage)
     }
 }
 
-void MultiThreadProcessor::processRegion(cv::Mat &image, const cv::Rect &region)
-{
-    applyHeavyFilter(image, region);
-}
-
-std::vector<cv::Rect> MultiThreadProcessor::divideImageIntoRegions(const cv::Mat &image)
+std::vector<cv::Rect> MultiThreadProcessor::divideImageIntoRegions(const cv::Mat& image) const
 {
     std::vector<cv::Rect> regions;
     regions.reserve(mNumThreads);
@@ -79,7 +75,7 @@ std::vector<cv::Rect> MultiThreadProcessor::divideImageIntoRegions(const cv::Mat
     return regions;
 }
 
-cv::Mat MultiThreadProcessor::processWithThreadPool(const cv::Mat &inputImage)
+cv::Mat MultiThreadProcessor::processWithThreadPool(const cv::Mat& inputImage)
 {
     cv::Mat outputImage = inputImage.clone();
 
@@ -88,12 +84,12 @@ cv::Mat MultiThreadProcessor::processWithThreadPool(const cv::Mat &inputImage)
     std::vector<std::future<void>> results;
     results.reserve(regions.size());
 
-    for (const auto &region : regions)
+    for (const auto& region : regions)
     {
-        results.push_back(mThreadPool->enqueue([this, &outputImage, region]() { processRegion(outputImage, region); }));
+        results.push_back(mThreadPool->enqueue([&outputImage, region]() { applyHeavyFilter(outputImage, region); }));
     }
 
-    for (auto &result : results)
+    for (auto& result : results)
     {
         result.wait();
     }
@@ -101,7 +97,7 @@ cv::Mat MultiThreadProcessor::processWithThreadPool(const cv::Mat &inputImage)
     return outputImage;
 }
 
-cv::Mat MultiThreadProcessor::processWithAsync(const cv::Mat &inputImage)
+cv::Mat MultiThreadProcessor::processWithAsync(const cv::Mat& inputImage)
 {
     cv::Mat outputImage = inputImage.clone();
 
@@ -110,13 +106,13 @@ cv::Mat MultiThreadProcessor::processWithAsync(const cv::Mat &inputImage)
     std::vector<std::future<void>> futures;
     futures.reserve(regions.size());
 
-    for (const auto &region : regions)
+    for (const auto& region : regions)
     {
         futures.push_back(
-            std::async(std::launch::async, [this, &outputImage, region]() { processRegion(outputImage, region); }));
+            std::async(std::launch::async, [&outputImage, region]() { applyHeavyFilter(outputImage, region); }));
     }
 
-    for (auto &future : futures)
+    for (auto& future : futures)
     {
         future.wait();
     }
@@ -124,7 +120,7 @@ cv::Mat MultiThreadProcessor::processWithAsync(const cv::Mat &inputImage)
     return outputImage;
 }
 
-cv::Mat MultiThreadProcessor::processWithJThreads(const cv::Mat &inputImage)
+cv::Mat MultiThreadProcessor::processWithJThreads(const cv::Mat& inputImage)
 {
     cv::Mat outputImage = inputImage.clone();
 
@@ -135,13 +131,12 @@ cv::Mat MultiThreadProcessor::processWithJThreads(const cv::Mat &inputImage)
     std::vector<std::jthread> threads;
     threads.reserve(regions.size());
 
-    for (const auto &region : regions)
+    for (const auto& region : regions)
     {
         threads.emplace_back(
-            [this, &outputImage, region, &completionLatch]()
+            [&outputImage, region, &completionLatch]()
             {
-                processRegion(outputImage, region);
-
+                applyHeavyFilter(outputImage, region);
                 completionLatch.count_down();
             });
     }

@@ -10,7 +10,6 @@ ThreadPool::ThreadPool(size_t numThreads) : mStop(false)
                 while (true)
                 {
                     std::function<void()> task;
-
                     {
                         std::unique_lock<std::mutex> lock(mQueueMutex);
                         mCondition.wait(lock, [this] { return mStop || !mTasks.empty(); });
@@ -23,7 +22,6 @@ ThreadPool::ThreadPool(size_t numThreads) : mStop(false)
                         task = std::move(mTasks.front());
                         mTasks.pop();
                     }
-
                     task();
                 }
             });
@@ -39,7 +37,7 @@ ThreadPool::~ThreadPool()
 
     mCondition.notify_all();
 
-    for (std::thread &worker : mWorkers)
+    for (std::thread& worker : mWorkers)
     {
         worker.join();
     }

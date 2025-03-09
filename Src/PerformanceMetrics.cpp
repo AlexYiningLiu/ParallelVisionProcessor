@@ -3,13 +3,13 @@
 #include <iomanip>
 #include <iostream>
 
-void PerformanceMetrics::startTimer(const std::string &name)
+void PerformanceMetrics::startTimer(const std::string& name)
 {
     std::lock_guard<std::mutex> lock(mMutex);
     mStartTime = std::chrono::high_resolution_clock::now();
 }
 
-void PerformanceMetrics::stopTimer(const std::string &name)
+void PerformanceMetrics::stopTimer(const std::string& name)
 {
     std::lock_guard<std::mutex> lock(mMutex);
     auto endTime = std::chrono::high_resolution_clock::now();
@@ -17,7 +17,7 @@ void PerformanceMetrics::stopTimer(const std::string &name)
     mElapsedTimes[name] = static_cast<double>(duration) / 1000.0;
 }
 
-double PerformanceMetrics::getElapsedTime(const std::string &name) const
+double PerformanceMetrics::getElapsedTime(const std::string& name) const
 {
     std::lock_guard<std::mutex> lock(mMutex);
     auto it = mElapsedTimes.find(name);
@@ -28,7 +28,7 @@ double PerformanceMetrics::getElapsedTime(const std::string &name) const
     return 0.0;
 }
 
-double PerformanceMetrics::calculateSpeedup(const std::string &baseline, const std::string &comparison) const
+double PerformanceMetrics::calculateSpeedup(const std::string& baseline, const std::string& comparison) const
 {
     double baselineTime = getElapsedTime(baseline);
     double comparisonTime = getElapsedTime(comparison);
@@ -40,7 +40,7 @@ double PerformanceMetrics::calculateSpeedup(const std::string &baseline, const s
     return 0.0;
 }
 
-double PerformanceMetrics::calculateEfficiency(const std::string &baseline, const std::string &comparison,
+double PerformanceMetrics::calculateEfficiency(const std::string& baseline, const std::string& comparison,
                                                int numThreads) const
 {
     double speedup = calculateSpeedup(baseline, comparison);

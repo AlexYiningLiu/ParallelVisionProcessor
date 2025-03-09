@@ -9,15 +9,15 @@ class PerformanceMetrics
 public:
     PerformanceMetrics() = default;
 
-    void startTimer(const std::string &name);
+    void startTimer(const std::string& name);
 
-    void stopTimer(const std::string &name);
+    void stopTimer(const std::string& name);
 
-    double getElapsedTime(const std::string &name) const;
+    double getElapsedTime(const std::string& name) const;
 
-    double calculateSpeedup(const std::string &baseline, const std::string &comparison) const;
+    double calculateSpeedup(const std::string& baseline, const std::string& comparison) const;
 
-    double calculateEfficiency(const std::string &baseline, const std::string &comparison, int numThreads) const;
+    double calculateEfficiency(const std::string& baseline, const std::string& comparison, int numThreads) const;
 
     void printMetrics(int numThreads) const;
 

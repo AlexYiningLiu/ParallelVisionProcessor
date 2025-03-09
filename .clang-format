@@ -19,4 +19,6 @@ SpaceBeforeParens: ControlStatements
 SpaceInEmptyParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-PointerAlignment: Right
+PointerAlignment: Left
+ReferenceAlignment: Left
+QualifierAlignment: Left

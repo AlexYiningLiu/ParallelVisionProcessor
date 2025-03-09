@@ -7,7 +7,7 @@
 #include <Utils/PerformanceMetrics.h>
 #include <Utils/Visualizer.h>
 
-void printUsage(const char *programName)
+void printUsage(const char* programName)
 {
     std::cout << "Usage: " << programName << " <image_path> [num_threads] [threading_strategy]\n";
     std::cout << "  <image_path>       : Path to the input image\n";
@@ -20,7 +20,7 @@ void printUsage(const char *programName)
     std::cout << "                        - jthread   : Use std::jthread\n";
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     if (argc < 2)
     {
@@ -31,6 +31,7 @@ int main(int argc, char **argv)
     std::string imagePath = argv[1];
     auto numThreads = static_cast<int>(std::thread::hardware_concurrency());
     MultiThreadProcessor::ThreadingStrategy strategy = MultiThreadProcessor::ThreadingStrategy::ThreadPool;
+    std::cout << "Detected " << numThreads << " hardware threads\n";
 
     if (argc >= 3)
     {
@@ -43,7 +44,7 @@ int main(int argc, char **argv)
                 return 1;
             }
         }
-        catch (const std::exception &e)
+        catch (const std::exception& e)
         {
             std::cerr << "Error parsing number of threads: " << e.what() << "\n";
             return 1;

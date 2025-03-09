@@ -2,8 +2,8 @@
 #include <iostream>
 #include <random>
 
-void Visualizer::displayImages(const cv::Mat &original, const cv::Mat &singleThread, const cv::Mat &multiThread,
-                               const std::vector<cv::Rect> &regions)
+void Visualizer::displayImages(const cv::Mat& original, const cv::Mat& singleThread, const cv::Mat& multiThread,
+                               const std::vector<cv::Rect>& regions)
 {
 
     cv::Mat regionView = original.clone();
@@ -35,7 +35,7 @@ void Visualizer::displayImages(const cv::Mat &original, const cv::Mat &singleThr
     cv::waitKey(0);
 }
 
-void Visualizer::displayProcessingRegions(cv::Mat &image, const std::vector<cv::Rect> &regions)
+void Visualizer::displayProcessingRegions(cv::Mat& image, const std::vector<cv::Rect>& regions)
 {
 
     cv::Mat overlay = image.clone();
@@ -43,7 +43,7 @@ void Visualizer::displayProcessingRegions(cv::Mat &image, const std::vector<cv::
     std::mt19937 rng(12345);
     std::uniform_int_distribution<int> dist(50, 255);
 
-    for (const auto region : regions)
+    for (const auto& region : regions)
     {
 
         cv::Scalar fillColor(dist(rng), dist(rng), dist(rng));
@@ -67,7 +67,7 @@ void Visualizer::displayProcessingRegions(cv::Mat &image, const std::vector<cv::
     }
 }
 
-void Visualizer::saveTimingChart(const std::string &filename, double singleThreadTime, double multiThreadTime,
+void Visualizer::saveTimingChart(const std::string& filename, double singleThreadTime, double multiThreadTime,
                                  int numThreads)
 {
 

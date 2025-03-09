@@ -6,8 +6,8 @@ class ImageProcessor
 public:
     virtual ~ImageProcessor() = default;
 
-    virtual cv::Mat process(const cv::Mat &inputImage) = 0;
+    virtual cv::Mat process(const cv::Mat& inputImage) = 0;
 
 protected:
-    static void applyHeavyFilter(cv::Mat &image, const cv::Rect &roi);
+    static void applyHeavyFilter(cv::Mat& image, const cv::Rect& roi);
 };
