@@ -35,3 +35,5 @@ x86/
 [Dd]ebug/
 [Rr]elease/
 [Rr]eleases/
+
+.vscode/
